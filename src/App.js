@@ -5,7 +5,7 @@ const {
   WebClient
 } = require('@slack/web-api');
 
-const token = 'xoxb-262286332902-1435797363075-fPdb7ZxQWl5H3IxAokBRAcpY';
+const token = process.env.AKDEVALLIANCE_TOKEN;
 const web = new WebClient(token);
 const idChannel = 'C01D66F6E7K';
 
