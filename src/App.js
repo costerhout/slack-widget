@@ -5,7 +5,8 @@ const {
   WebClient
 } = require('@slack/web-api');
 
-const token = process.env.AKDEVALLIANCE_TOKEN;
+// const token = process.env.AKDEVALLIANCE_TOKEN;
+const token = require('./token.json').token;
 const web = new WebClient(token);
 const idChannel = 'C01D66F6E7K';
 
@@ -24,15 +25,32 @@ const getUsers = async () => {
     await records.push.apply(records, response.members);
     cursor = response.response_metadata.next_cursor;
     
-    keepGoing = response.ok && cursor !== '';
+    // keepGoing = response.ok && cursor !== '';
+    keepGoing = false;
   }
 
-  console.log(records.length);
+  return records;
 }
 
-getUsers();
+const getProfile = async (user) => {
+  // todo: consider caching labels from team.profile.get
+  let profile = await web.users.profile.get({
+    user: user,
+    include_labels: false
+  });
+  
+  return profile;
+}
+
+const main = async () => {
+  const users = await getUsers();
+  const profile = await getProfile(users[0].id);
+  console.log(profile);  
+}
 
 function App() {
+  main();
+  
   return ( <
     div className = "slack-widget" >
     <
