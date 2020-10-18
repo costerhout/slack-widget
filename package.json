@@ -1,0 +1,9 @@
+{
+  "name": "slack-widget",
+  "version": "0.1.0",
+  "description": "Pull information from the AKDev Alliance Slack workspace",
+  "main": "index.js",
+  "repository": "https://github.com/akdevalliance/slack-widget.git",
+  "author": "Colin Osterhout <colixx@gmail.com>, Solomon Himelbloom, Jeff Levine",
+  "license": "MIT"
+}
