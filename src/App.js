@@ -2,13 +2,10 @@ import React from 'react';
 import './App.css';
 import $ from 'jquery';
 import _ from 'lodash';
+import Async from "react-async"
 
 const TIMEOUT = 5000;
 const urlSlackWidgetProxy = 'https://wg2ljjg5da.execute-api.us-east-1.amazonaws.com/dev/profile/view';
-
-let loadedProfile = {
-  display_name: ""
-};
 
 // ----------------------------------------------------------------------------
 // loadProfile - bring in a profile from the AKDevAlliance slack channel
@@ -47,23 +44,21 @@ const loadProfile = _.memoize(profileId => {
 })
 
 function App() {
-  loadProfile()
-    .then((profile) => {
-      console.log(JSON.stringify(profile, null, 2))
-      loadedProfile = profile;
-    });
-  
   return (
-    <div className = "slack-widget">
-      <h1>Name: <ProfileName/></h1>
-    </div>
+    <Async promiseFn={loadProfile}>
+      {({ data, error, isLoading }) => {
+        if (isLoading) return "Loading..."
+        if (error) return `Something went wrong: ${error.message}`
+        if (data)
+          return (
+            <div>
+              <strong>Loaded some data:</strong>
+              <pre>{JSON.stringify(data, null, 2)}</pre>
+            </div>
+          )
+        return null
+      }}
+    </Async>
   );
 }
-
-function ProfileName() {
-  return (
-    <span>Test!</span>
-  )
-}
-
 export default App;
