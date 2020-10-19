@@ -6,6 +6,10 @@ import _ from 'lodash';
 const TIMEOUT = 5000;
 const urlSlackWidgetProxy = 'https://wg2ljjg5da.execute-api.us-east-1.amazonaws.com/dev/profile/view';
 
+let loadedProfile = {
+  display_name: ""
+};
+
 // ----------------------------------------------------------------------------
 // loadProfile - bring in a profile from the AKDevAlliance slack channel
 //
@@ -46,12 +50,20 @@ function App() {
   loadProfile()
     .then((profile) => {
       console.log(JSON.stringify(profile, null, 2))
+      loadedProfile = profile;
     });
   
   return (
     <div className = "slack-widget">
-    <h1>Yo</h1></div>
+      <h1>Name: <ProfileName/></h1>
+    </div>
   );
+}
+
+function ProfileName() {
+  return (
+    <span>Test!</span>
+  )
 }
 
 export default App;
