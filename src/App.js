@@ -1,61 +1,56 @@
 import React from 'react';
 import './App.css';
+import $ from 'jquery';
+import _ from 'lodash';
 
-const {
-  WebClient
-} = require('@slack/web-api');
+const TIMEOUT = 5000;
+const urlSlackWidgetProxy = 'https://wg2ljjg5da.execute-api.us-east-1.amazonaws.com/dev/profile/view';
 
-// const token = process.env.AKDEVALLIANCE_TOKEN;
-const token = require('./token.json').token;
-const web = new WebClient(token);
-const idChannel = 'C01D66F6E7K';
+// ----------------------------------------------------------------------------
+// loadProfile - bring in a profile from the AKDevAlliance slack channel
+//
+// Returns Promise which resolves with the data obtained from the URL or rejected
+// with an Error object.
+//
+// Utilizes lodash's memoize function to cache the result so that only one fetch
+// is made to the same URL.
+// ----------------------------------------------------------------------------
+const loadProfile = _.memoize(profileId => {
+  return new Promise((resolve, reject) => {
+    // Set a timeout so that we can provide a graceful way to report network issues
+    const hTimeout = setTimeout(() => {
+      reject(new Error('Timeout loading profile data'))
+    }, TIMEOUT)
 
-// Grab list of all the users
-const getUsers = async () => {
-  const limit = 50;
-  let records = [];
-  let keepGoing = true;
-  let cursor = undefined;
-  
-  while (keepGoing) {
-    let response = await web.users.list({
-      limit: limit,
-      cursor: cursor
-    });
-    await records.push.apply(records, response.members);
-    cursor = response.response_metadata.next_cursor;
-    
-    // keepGoing = response.ok && cursor !== '';
-    keepGoing = false;
-  }
+    const isErrorCritical = jqXHR => !(jqXHR.readyState === 0 && jqXHR.status === 0)
+    const processData = (data) => {
+      // perform any necessary data mangling here
+      clearTimeout(hTimeout)
+      resolve(data)
+    }
 
-  return records;
-}
-
-const getProfile = async (user) => {
-  // todo: consider caching labels from team.profile.get
-  let profile = await web.users.profile.get({
-    user: user,
-    include_labels: false
-  });
-  
-  return profile;
-}
-
-const main = async () => {
-  const users = await getUsers();
-  const profile = await getProfile(users[0].id);
-  console.log(profile);  
-}
+    // Use jQuery to get the desired data and then upon receipt run the processData function to massage into usable data
+    $.get({
+      url: urlSlackWidgetProxy,
+      dataType: 'json'
+    }).done(processData)
+      .fail((jqXHR, textStatus) => {
+        if (isErrorCritical(jqXHR)) {
+          reject(new Error(`Could not load profile data. Status: ${textStatus}`))
+        }
+      })
+  })
+})
 
 function App() {
-  main();
+  loadProfile()
+    .then((profile) => {
+      console.log(JSON.stringify(profile, null, 2))
+    });
   
-  return ( <
-    div className = "slack-widget" >
-    <
-    h1 > Yo < /h1> <
-    /div>
+  return (
+    <div className = "slack-widget">
+    <h1>Yo</h1></div>
   );
 }
 
