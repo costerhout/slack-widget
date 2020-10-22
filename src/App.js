@@ -2,7 +2,8 @@ import React from 'react';
 import './App.css';
 import $ from 'jquery';
 import _ from 'lodash';
-import Async from "react-async"
+import Async from 'react-async'
+import DataTable from 'react-data-table'
 
 const TIMEOUT = 5000;
 const urlSlackWidgetProxy = 'https://wg2ljjg5da.execute-api.us-east-1.amazonaws.com/dev/profile/view';
@@ -45,6 +46,12 @@ const loadProfile = _.memoize(profileId => {
 
 function App() {
   return (
+    <h2>List of Profiles</h2>
+    <Async promiseFn={loadProfiles}>
+      <DataTable data={dataProfiles}></DataTable>
+    </Async>
+    
+    <h2>Individual Sample Profile</h2>
     <Async promiseFn={loadProfile}>
       {({ data, error, isLoading }) => {
         if (isLoading) return "Loading..."
