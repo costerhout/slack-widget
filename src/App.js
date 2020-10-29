@@ -1,3 +1,13 @@
+/**
+ * @Author: Colin Osterhout <ctosterhout>
+ * @Date:   2020-10-17T21:15:51-08:00
+ * @Email:  colixx@gmail.com
+ * @Project: slack-widget
+ * @Last modified by:   ctosterhout
+ * @Last modified time: 2020-10-28T23:50:10-08:00
+ * @License: MIT
+ */
+
 import React from 'react';
 import DataTable from 'react-data-table-component';
 import 'milligram';
