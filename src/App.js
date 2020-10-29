@@ -9,13 +9,13 @@ const urlSlackProfileList = 'https://wg2ljjg5da.execute-api.us-east-1.amazonaws.
 function ProfileView(props) {
   const headers = { Accept: 'application/json' };
   const options = { method: 'GET', mode: 'cors' };
-  const { data, error, isPending, run } = useFetch(`${urlSlackProfileView}/${props.idProfile}`, { headers }, options);
+  const { data, error } = useFetch(`${urlSlackProfileView}/${props.idProfile}`, { headers }, options);
   
   if (data) {
     return (
       <div className="profile">
-        <h2>{data.real_name}</h2>
-        <img src={data.image_512} alt={`Profile picture for ${data.real_name}`}/>
+        <h3>{data.real_name}</h3>
+        <img src={data.image_512} alt={`${data.real_name}`}/>
       </div>
     );
   }
@@ -45,7 +45,7 @@ function ProfileList() {
       right: true,
     },
   ];
-  const { data, error, isPending, run } = useFetch(`${urlSlackProfileList}`, { headers }, options);
+  const { data, error } = useFetch(`${urlSlackProfileList}`, { headers }, options);
   
   if (data) {
     // The data is a collection of objects. Each user object has a profile object, and that's what we're building off of.
@@ -76,14 +76,25 @@ function ProfileList() {
   return null;
 }
 
-// Presently justs lists yours truly
+// Presently justs lists yours a few hardcoded IDs
 function App() {
   return (
     <div className="container">
+      <h2>Single Profiles</h2>
+      <div className="row">
+        <div className="col">
+          <ProfileView idProfile='UT1AQMNHK'/>
+        </div>
+        <div className="col">
+          <ProfileView idProfile='U8FPH8QAC'/>
+        </div>
+        <div className="col">
+          <ProfileView idProfile='UNG3GTJCQ'/>
+        </div>
+      </div>
+      
       <h2>List of Profiles</h2>
       <ProfileList />
-      <h2>Single Profile</h2>
-      <ProfileView idProfile='UT1AQMNHK'/>
     </div>
   );
 }
