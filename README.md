@@ -1,3 +1,16 @@
+# slack-widget
+
+A React-based widget to display a list of users garnered (via a proxy, see slack-widget-proxy) from a Slack channel.
+
+## Dependencies
+
+* React - Javascript component creation framework/library/bundling/way-of-life
+* react-async - provides async XHR ability to React
+* milligram - provides a nice easy way to perform responsive design in a lightweight fashion. Should provide a straightforward path to transitioning to some other framework if desired.
+
+Boilerplate stuff follwows.
+----------%<----------
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
