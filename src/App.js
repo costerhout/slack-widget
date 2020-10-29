@@ -76,7 +76,7 @@ function ProfileList() {
   return null;
 }
 
-// Presently justs lists yours a few hardcoded IDs
+// Presently justs lists a few hardcoded IDs
 function App() {
   return (
     <div className="container">
